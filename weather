@@ -1,14 +1,16 @@
 #!/usr/bin/env python3.10
 
-from gps_coordinates import get_coordinates
-from weather_api_service import get_weather
-from weather_formatter import format_weather
+from gps_coordinates import get_gps_coordinates
+# from weather_api_service import get_weather
+# from weather_formatter import format_weather
 
 
 def main():
-    coordinates = get_coordinates()
-    weather = get_weather(coordinates)
-    print(format_weather(weather))
+    coordinates = get_gps_coordinates()
+    print(coordinates.latitude)
+    print(coordinates.longitude)
+    # weather = get_weather(coordinates)
+    # print(format_weather(weather))
 
 
 if __name__ == "__main__":
