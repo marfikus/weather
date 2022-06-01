@@ -7,3 +7,6 @@ class CantGetCoordinates(Exception):
 
     def __str__(self):
         return self.msg
+
+class ApiServiceError(Exception):
+    """Api service error"""

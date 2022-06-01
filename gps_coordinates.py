@@ -73,3 +73,7 @@ def _round_coordinates(coordinates: Coordinates) -> Coordinates:
         lambda c: round(c, 1),
         [coordinates.latitude, coordinates.longitude]
     ))
+
+
+if __name__ == "__main__":
+    print(get_gps_coordinates())
