@@ -1,0 +1,2 @@
+latitude: 56.0852
+longitude: 63.6335
