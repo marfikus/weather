@@ -60,7 +60,7 @@ def _parse_coordinate(
                 raise CantGetCoordinates("parsing to float error")
     
     if coordinate is None:
-        raise CantGetCoordinates("coordinate not found")
+        raise CantGetCoordinates(f"coordinate '{coord_type}' not found")
     else:
         return coordinate
 

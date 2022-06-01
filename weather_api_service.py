@@ -52,14 +52,14 @@ def _get_openweather_response(latitude: float, longitude: float) -> str:
     try:
         return urllib.request.urlopen(url).read()
     except URLError:
-        raise ApiServiceError
+        raise ApiServiceError("request to api error")
 
 
 def _parse_openweather_response(openweather_response: str) -> Weather:
     try:
         openweather_dict = json.loads(openweather_response)
     except JSONDecodeError:
-        raise ApiServiceError
+        raise ApiServiceError("json decode error")
 
     return Weather(
         temperature=_parse_temperature(openweather_dict),
@@ -78,7 +78,7 @@ def _parse_weather_type(openweather_dict: dict) -> WeatherType:
     try:
         weather_type_id = str(openweather_dict["weather"][0]["id"])
     except (IndexError, KeyError):
-        raise ApiServiceError
+        raise ApiServiceError("parse weather type error (IndexError, KeyError)")
 
     weather_types = {
         "1": WeatherType.THUNDERSTORM,
@@ -94,7 +94,7 @@ def _parse_weather_type(openweather_dict: dict) -> WeatherType:
         if weather_type_id.startswith(_id):
             return _weather_type
 
-    raise ApiServiceError
+    raise ApiServiceError("parse weather type error")
 
 
 def _parse_sun_time(
