@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from exceptions import ApiServiceError, CantGetCoordinates
+from exceptions import ApiServiceError, CantGetCoordinates, HistoryError
 from gps_coordinates import get_gps_coordinates
 from weather_api_service import get_weather
 from weather_formatter import format_weather
@@ -23,11 +23,16 @@ def main():
         exit(1)
         
     print(format_weather(weather))
-    save_weather(
-        weather,
-        # PlainFileWeatherStorage(Path.cwd() / "history.txt")
-        JSONFileWeatherStorage(Path.cwd() / "history.json")
-    )
+
+    try:
+        save_weather(
+            weather,
+            # PlainFileWeatherStorage(Path.cwd() / "history.txt")
+            JSONFileWeatherStorage(Path.cwd() / "history.json")
+        )
+    except HistoryError as e:
+        print("Не смог сохранить данные", f"({e.msg})")
+        exit(1)
 
 
 if __name__ == "__main__":

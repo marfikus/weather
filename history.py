@@ -6,6 +6,7 @@ import json
 
 from weather_api_service import Weather
 from weather_formatter import format_weather
+from exceptions import HistoryError
 
 
 class WeatherStorage(Protocol):
@@ -24,8 +25,11 @@ class PlainFileWeatherStorage:
     def save(self, weather: Weather) -> None:
         now = datetime.now()
         formatted_weather = format_weather(weather)
-        with open(self._file, "a") as f:
-            f.write(f"{now}\n{formatted_weather}\n")
+        try:
+            with open(self._file, "a") as f:
+                f.write(f"{now}\n{formatted_weather}\n")
+        except:
+            raise HistoryError("saving history error")
 
 
 class HistoryRecord(TypedDict):
@@ -42,7 +46,10 @@ class JSONFileWeatherStorage:
 
     def _init_storage(self) -> None:
         if not self._jsonfile.exists():
-            self._jsonfile.write_text("[]")
+            try:
+                self._jsonfile.write_text("[]")
+            except:
+                raise HistoryError("init history storage error")
 
     def save(self, weather: Weather) -> None:
         history = self._read_history()
@@ -53,12 +60,18 @@ class JSONFileWeatherStorage:
         self._write(history)
 
     def _read_history(self) -> list[HistoryRecord]:
-        with open(self._jsonfile, "r") as f:
-            return json.load(f)
+        try:
+            with open(self._jsonfile, "r") as f:
+                return json.load(f)
+        except:
+            raise HistoryError("reading history error")
 
     def _write(self, history: list[HistoryRecord]) -> None:
-        with open(self._jsonfile, "w") as f:
-            json.dump(history, f, ensure_ascii=False, indent=4)
+        try:
+            with open(self._jsonfile, "w") as f:
+                json.dump(history, f, ensure_ascii=False, indent=4)
+        except:
+            raise HistoryError("saving history error")
 
 
 def save_weather(weather: Weather, storage: WeatherStorage) -> None:
